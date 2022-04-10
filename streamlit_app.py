@@ -52,7 +52,7 @@ st.title('OpenAI Clip zero-shot image classification')
 
 with st.sidebar:
     st_labels = st.text_area('Labels:',
-                             'naked\nbikini\nswimwear\nanime\nrape\nboobs\nvagina\nblood\ndead\ngun\nfighting\nbedroom\nbeach\nmeme\nwar\nsports',
+                             'naked\nbikini\nswimwear\nanime\nboobs\nblood\ndead\ngun\nfighting\nbedroom\nbeach\nmeme\nwar\nsports',
                              height=500)
 
 
