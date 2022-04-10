@@ -83,7 +83,7 @@ ts = load_classifier(field_labels)
 
 # test
 st_image_urls = st.text_area('Image URLs:',
-                             'https://pbs.twimg.com/media/E7Ni6RFXIAIwju_.jpg\nhttps://pbs.twimg.com/media/E7Niw-MXIA88N8c.jpg\nhttps://pbs.twimg.com/media/BBuCZgpCUAAZqnX.jpg',
+                             '',
                              height=300)
 field_image_urls = st_image_urls.split('\n')
 
