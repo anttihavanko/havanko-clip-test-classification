@@ -165,6 +165,6 @@ if st.button('Classify'):
         df2 = df[df.labels == l]
         i = images_np[df2.index].tolist()
 
-        l = l if len(l) > 0 else 'No categories found'
+        l = l if len(l) > 0 else 'No labels'
         st.subheader(f'{l}:')
         st.image(i, width=200, caption=list(df2['url']))
