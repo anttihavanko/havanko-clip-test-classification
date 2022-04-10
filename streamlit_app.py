@@ -56,7 +56,7 @@ with st.sidebar:
                              height=500)
 
 
-@st.cache
+@st.cache(allow_output_mutation=True)
 def load_text_model():
     return SentenceTransformer('sentence-transformers/clip-ViT-B-32-multilingual-v1')
 
@@ -69,26 +69,28 @@ def load_image_model():
 
 # label
 @st.cache
-def load_classifier(labels):
-    model = load_text_model()
+def load_classifier(text_model, labels):
     labels = list(filter(None, labels))
     labels2 = [f'{l} {l} {l}' for l in labels]
-    labels_embeddings = model.encode(labels2)
+    labels_embeddings = text_model.encode(labels2)
 
     return Classifier(labels, labels_embeddings)
 
-
-field_labels = st_labels.split('\n')
-ts = load_classifier(field_labels)
-
 # test
 st_image_urls = st.text_area('Image URLs:',
-                             '',
+                             'https://pbs.twimg.com/media/E7Ni6RFXIAIwju_.jpg\nhttps://pbs.twimg.com/media/E7Niw-MXIA88N8c.jpg\nhttps://pbs.twimg.com/media/BBuCZgpCUAAZqnX.jpg',
                              height=300)
+
+field_labels = st_labels.split('\n')
 field_image_urls = st_image_urls.split('\n')
 
+data_load_model_state = st.text('Loading models. Please wait a bit...')
+text_model = load_text_model()
+image_model = load_image_model()
+data_load_model_state.text('')
 
-@st.cache
+ts = load_classifier(text_model, field_labels)
+
 def load(url):
     print(url)
     try:
@@ -102,7 +104,7 @@ def load(url):
         return None
 
 
-def create_embeddings(field_image_urls):
+def create_embeddings(image_model, field_image_urls):
     urls = []
     images = []
 
@@ -112,7 +114,6 @@ def create_embeddings(field_image_urls):
             urls.append(url)
             images.append(im)
 
-    image_model = load_image_model()
     return urls, images, image_model.encode(images)
 
 
@@ -120,7 +121,7 @@ if st.button('Classify'):
     st.header('Predictions')
 
     data_load_state = st.text('Loading images...')
-    image_urls, images, image_embeddings = create_embeddings(field_image_urls)
+    image_urls, images, image_embeddings = create_embeddings(image_model, field_image_urls)
 
     # predict
     data_load_state.text('Classifying...')
@@ -155,5 +156,5 @@ if st.button('Classify'):
 
         l = l if len(l) > 0 else 'No categories found'
         st.text(f' ')
-        st.text(f'Photos with: {l}:')
+        st.text(f'{l}:')
         st.image(i, width=200)
