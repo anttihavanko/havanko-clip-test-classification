@@ -141,7 +141,7 @@ if st.button('Classify'):
     for p in predictions:
         keys = [k for k, v in p]
         keys.sort()
-        keys = ','.join(keys)
+        keys = ', '.join(keys)
         c = c + 1
         labels.append(keys)
 
@@ -157,7 +157,7 @@ if st.button('Classify'):
 
     data_load_state.text('')
 
-    st.subheader('Grouped by labels:')
+    st.text(' ')
 
     # show images
     images_np = np.array(images)
@@ -166,6 +166,5 @@ if st.button('Classify'):
         i = images_np[df2.index].tolist()
 
         l = l if len(l) > 0 else 'No categories found'
-        st.text(f' ')
-        st.text(f'{l}:')
+        st.subheader(f'{l}:')
         st.image(i, width=200, caption=list(df2['url']))
