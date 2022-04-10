@@ -52,8 +52,9 @@ st.title('OpenAI Clip zero-shot image classification')
 
 with st.sidebar:
     st_labels = st.text_area('Labels:',
-                             'naked\nbikini\nswimwear\nanime\nboobs\nblood\ndead\ngun\nfighting\nbedroom\nbeach\nmeme\nwar\nsports',
+                             'naked\nbikini\nswimwear\nanime\nboobs\nblood\ndeath\ngun\nfighting\nbedroom\nbeach\nmeme\nwar\nsports',
                              height=500)
+
 
 
 @st.cache(allow_output_mutation=True)
@@ -79,7 +80,7 @@ def load_classifier(text_model, labels):
 # test
 st_image_urls = st.text_area('Image URLs:',
                              '',
-                             height=300)
+                             height=250)
 
 field_labels = st_labels.split('\n')
 field_image_urls = st_image_urls.split('\n')
@@ -116,6 +117,14 @@ def create_embeddings(image_model, field_image_urls):
 
     return urls, images, image_model.encode(images)
 
+col1, col2 = st.columns(2)
+
+with col1:
+    st_count = st.number_input('Max. labels per image', value=2)
+
+with col2:
+    st_prob_threshold = st.number_input('Threshold', value=0.225)
+
 
 if st.button('Classify'):
     st.header('Predictions')
@@ -125,7 +134,7 @@ if st.button('Classify'):
 
     # predict
     data_load_state.text('Classifying...')
-    predictions = ts.predict(image_embeddings, count=2, prob_threshold=0.225)
+    predictions = ts.predict(image_embeddings, count=st_count, prob_threshold=st_prob_threshold)
 
     c = 0
     labels = []
