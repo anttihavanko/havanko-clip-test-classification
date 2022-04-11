@@ -21,7 +21,7 @@ class Classifier:
 
         storage = "Flat"
         cells = min(round(4 * math.sqrt(COUNT)), int(COUNT / 39))
-        cells = max(cells, 5)
+        cells = max(cells, len(labels))
 
         params = f"IVF{cells},{storage}"
         print(f'params: {params}')
@@ -92,6 +92,7 @@ data_load_model_state.text('')
 
 ts = load_classifier(text_model, field_labels)
 
+@st.cache
 def load(url):
     print(url)
     try:
@@ -125,8 +126,9 @@ with col1:
 with col2:
     st_prob_threshold = st.number_input('Threshold', value=0.225)
 
+btn_disabled = len(st_image_urls) == 0
 
-if st.button('Classify'):
+if st.button('Classify', disabled=btn_disabled):
     st.header('Predictions')
 
     data_load_state = st.text('Loading images...')
